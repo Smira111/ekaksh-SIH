@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EKAKSH — Precision Cattle Care</title>
+<style>
+:root{
+  --cream:#F7F3EA;--ink:#20281F;--ink2:#3d4636;--line:#E4DCC9;--card:#FFFFFF;
+  --ok-bg:#E9F1E7;--ok-fg:#4C7A52;--med-bg:#FBF0DC;--med-fg:#A9781E;--hi-bg:#F8E3DB;--hi-fg:#BE5A34;
+  --accent:#BE5A34;--accent-d:#9C4527;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --cream:#181A16;--ink:#EDE8DC;--ink2:#B9C0AC;--line:#33362B;--card:#22251E;
+  --ok-bg:#22301F;--ok-fg:#8FCB92;--med-bg:#332A16;--med-fg:#E0B255;--hi-bg:#3A2019;--hi-fg:#F0977A;
+}}
+:root[data-theme="dark"]{
+  --cream:#181A16;--ink:#EDE8DC;--ink2:#B9C0AC;--line:#33362B;--card:#22251E;
+  --ok-bg:#22301F;--ok-fg:#8FCB92;--med-bg:#332A16;--med-fg:#E0B255;--hi-bg:#3A2019;--hi-fg:#F0977A;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:-apple-system,"Segoe UI",Roboto,"Noto Sans Devanagari","Nirmala UI",Mangal,"Kohinoor Devanagari",Helvetica,Arial,sans-serif;min-height:100%}
+h1,h2,h3,.serif{font-family:Georgia,"Iowan Old Style","Times New Roman","Noto Sans Devanagari","Nirmala UI",Mangal,"Kohinoor Devanagari",serif}
+.app{display:flex;max-width:1400px;margin:0 auto;min-height:100vh}
+.sidebar{width:250px;flex-shrink:0;padding:28px 20px;border-right:1px solid var(--line);position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
+.brand h1{font-size:22px;margin:0;letter-spacing:.5px}
+.brand p{margin:2px 0 22px;font-size:11px;letter-spacing:1.5px;color:var(--ink2);text-transform:uppercase}
+.gw{display:flex;align-items:center;gap:8px;background:var(--ok-bg);color:var(--ok-fg);padding:8px 12px;border-radius:10px;font-size:13px;font-weight:600;margin-bottom:18px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--ok-fg)}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav button{display:flex;align-items:center;gap:12px;padding:11px 12px;border:none;background:none;border-radius:10px;font-size:15px;color:var(--ink2);cursor:pointer;text-align:left;font-family:inherit}
+.nav button.active{background:var(--card);color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.nav button:hover{color:var(--ink)}
+.farmbox{margin-top:auto;background:var(--ok-bg);border-radius:12px;padding:14px}
+.farmbox .l{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink2)}
+.farmbox b{display:block;font-size:15px;margin:2px 0}
+.farmbox .s{font-size:12px;color:var(--ink2)}
+.main{flex:1;padding:28px 34px 90px;min-width:0}
+.topline{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.topline h1{font-size:30px;margin:2px 0}
+.topline p{margin:0;color:var(--ink2)}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:none;border-radius:10px;padding:11px 18px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px}
+.btn-dark{background:var(--ink);color:var(--cream)}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-ghost{background:var(--card);border:1px solid var(--line);color:var(--ink)}
+.btn:active{transform:scale(.98)}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;align-items:start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.stat .l{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--ink2);display:flex;justify-content:space-between}
+.stat .v{font-size:30px;font-family:Georgia,serif;margin-top:8px}
+.stat.hi{background:var(--hi-bg);color:var(--hi-fg)}
+.stat.med{background:var(--med-bg);color:var(--med-fg)}
+.stat.ok{background:var(--ok-bg);color:var(--ok-fg)}
+.see{color:var(--accent);font-size:12px;font-weight:600;cursor:pointer;text-decoration:underline}
+.badge{font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap}
+.badge.hi{background:var(--hi-bg);color:var(--hi-fg)}
+.badge.med{background:var(--med-bg);color:var(--med-fg)}
+.badge.ok{background:var(--ok-bg);color:var(--ok-fg)}
+.chip{border:1px solid var(--line);background:var(--card);padding:8px 16px;border-radius:20px;font-size:13px;cursor:pointer;color:var(--ink)}
+.chip.active{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.search{width:100%;padding:12px 16px;border:1px solid var(--line);border-radius:10px;font-size:14px;margin-bottom:14px;background:var(--card);color:var(--ink);font-family:inherit}
+.cowcard{margin-bottom:14px}
+.cowhead{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;cursor:pointer}
+.cowid{width:44px;height:44px;border-radius:10px;background:var(--med-bg);color:var(--med-fg);display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-weight:700;font-size:17px}
+.cowrow{display:flex;gap:12px}
+.metric{flex:1;border-radius:10px;padding:10px 12px}
+.metric .l{font-size:10px;letter-spacing:1px;text-transform:uppercase;opacity:.75}
+.metric .v{font-size:19px;font-weight:700;margin-top:2px}
+.tag{background:var(--cream);border:1px solid var(--line);border-radius:8px;padding:4px 10px;font-size:12px;margin:0 6px 6px 0;display:inline-block}
+.proto label{display:flex;align-items:center;gap:10px;padding:9px 0;font-size:14px;border-bottom:1px solid var(--line)}
+.proto label:last-child{border:none}
+.rowbtn{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.rowbtn .btn{flex:1}
+.lang{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.lang button{padding:16px;border-radius:12px;border:1px solid var(--line);background:var(--card);cursor:pointer;font-family:inherit;color:var(--ink)}
+.lang button.active{background:var(--ink);color:var(--cream)}
+.node{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.node:last-child{border:none}
+.node .n{font-weight:600;font-size:14px}
+.node .s{font-size:12px;color:var(--ink2)}
+.danger{border-color:var(--hi-fg)}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal{background:var(--card);border-radius:16px;padding:24px;max-width:420px;width:100%;max-height:85vh;overflow:auto}
+.modal h3{margin-top:0}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;color:var(--ink2);margin-bottom:5px}
+.field select,.field input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;font-family:inherit;background:var(--cream);color:var(--ink)}
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--cream);padding:12px 22px;border-radius:30px;font-size:14px;z-index:60;box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.cowrow{flex-wrap:wrap}
+.metric{background:var(--cream);color:var(--ink);min-width:130px}
+.metric.hi{background:var(--hi-bg);color:var(--hi-fg)}.metric.med{background:var(--med-bg);color:var(--med-fg)}.metric.ok{background:var(--ok-bg);color:var(--ok-fg)}
+.metric .l{text-transform:none;letter-spacing:0;font-size:12px;opacity:.9}
+.metric .st{font-size:12px;font-weight:700;margin:2px 0 6px}
+.gauge{position:relative;height:14px;margin-top:4px}
+.gtrack{display:flex;height:8px;border-radius:4px;overflow:hidden;position:absolute;top:3px;left:0;right:0;opacity:.6}
+.gtrack i{display:block;height:100%}
+.gdot{position:absolute;top:0;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#111;border:2px solid #fff;box-sizing:border-box}
+.hbar{display:flex;align-items:center;gap:10px;margin:10px 0;font-size:14px}
+.hbar .hl{width:110px;flex-shrink:0}
+.htrack{flex:1;height:18px;background:var(--cream);border-radius:9px;overflow:hidden}
+.htrack div{height:100%;border-radius:9px}
+.legend{font-size:12px;color:var(--ink2);margin-top:6px}
+.ldash{display:inline-block;width:22px;border-top:2px dashed var(--ok-fg);vertical-align:middle}
+.selcow{padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--cream);color:var(--ink);font-family:inherit}
+.lang button{font-size:16px}
+.bottomnav{display:none}
+@media(max-width:880px){
+  .sidebar{display:none}
+  .main{padding:18px 16px 100px}
+  .grid4{grid-template-columns:repeat(2,1fr)}
+  .grid2{grid-template-columns:1fr}
+  .bottomnav{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);padding:8px 4px calc(8px + env(safe-area-inset-bottom,0px));z-index:40}
+  .bottomnav button{flex:1;background:none;border:none;font-size:10px;color:var(--ink2);display:flex;flex-direction:column;align-items:center;gap:3px;font-family:inherit}
+  .bottomnav button.active{color:var(--accent);font-weight:700}
+  .actions{width:100%}.actions .btn{flex:1;justify-content:center}
+}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="theme.css">
+</head>
+<body>
+<div id="pub"></div>
+<div class="app">
+  <div class="sidebar">
+    <div class="brand"><h1>EKAKSH</h1><p id="brandSub"></p></div>
+    <div class="gw"><span class="dot"></span> <span id="gwTxt"></span></div>
+    <div class="nav" id="nav"></div>
+    <div class="farmbox"><div class="l" id="fbLbl"></div><b id="fbName"></b><div class="s" id="fbSub"></div><div class="userrow"><span id="uName"></span><button id="uOut" onclick="logout()"></button></div></div>
+  </div>
+  <div class="main" id="main"></div>
+</div>
+<div class="bottomnav" id="bnav"></div>
+<div id="modalRoot"></div>
+<script>
+// ---------- Translations: every text is [English, Hindi, Marathi] ----------
+const LANGS=['en','hi','mr'];
+const LOC={en:'en-IN',hi:'hi-IN',mr:'mr-IN'};
+const X={
+ home:["Home","होम","मुख्यपृष्ठ"],dashboard:["Dashboard","डैशबोर्ड","डॅशबोर्ड"],herd:["My Cows","मेरे पशु","माझी जनावरे"],
+ forecast:["Health Warnings","स्वास्थ्य चेतावनी","आरोग्य इशारा"],settings:["Settings","सेटिंग्स","सेटिंग्ज"],
+ brandSub:["Smart Cattle Care","पशुओं की स्मार्ट देखभाल","गुरांची स्मार्ट काळजी"],
+ gwOnline:["Sensor gateway is on","सेंसर गेटवे चालू है","सेन्सर गेटवे सुरू आहे"],
+ activeFarm:["Your farm","आपका फार्म","तुमचा फार्म"],
+ cattleCount:["{n} cows • {loc}","{n} पशु • {loc}","{n} जनावरे • {loc}"],
+ namaste:["Namaste, Farmer","नमस्ते, किसान भाई","नमस्कार, शेतकरी मित्रा"],
+ watched:["cows being watched","पशुओं पर नज़र रखी जा रही है","जनावरांवर लक्ष ठेवले जात आहे"],
+ need:["cows need care","पशुओं को देखभाल चाहिए","जनावरांना काळजी हवी"],
+ logMilking:["Add Milk Record","दूध दर्ज करें","दूध नोंदवा"],
+ vetCall:["Call the Vet","पशु डॉक्टर को बुलाएँ","पशुवैद्यकाला बोलवा"],
+ cDashT:["Dashboard","डैशबोर्ड","डॅशबोर्ड"],cDashD:["Health charts and today's readings","स्वास्थ्य के ग्राफ़ और आज की रीडिंग","आरोग्याचे आलेख आणि आजचे मोजमाप"],
+ cHerdT:["My Cows","मेरे पशु","माझी जनावरे"],cHerdD:["See all your cows","अपने सभी पशु देखें","तुमची सर्व जनावरे पहा"],
+ cFcT:["Health Warnings","स्वास्थ्य चेतावनी","आरोग्य इशारा"],cFcD:["Which cow may fall sick soon, and what to do","कौन सा पशु बीमार हो सकता है और क्या करें","कोणते जनावर आजारी पडू शकते आणि काय करावे"],
+ cSetT:["Settings and Language","सेटिंग्स और भाषा","सेटिंग्ज आणि भाषा"],cSetD:["Language, sync and offline","भाषा, सिंक और ऑफ़लाइन","भाषा, सिंक आणि ऑफलाइन"],
+ priority:["Cows that need care","देखभाल चाहिए वाले पशु","काळजी हवी असलेली जनावरे"],seeAll:["See all","सभी देखें","सर्व पहा"],
+ cowsLine:["{loc} • {n} cows","{loc} • {n} पशु","{loc} • {n} जनावरे"],
+ online:["Online","ऑनलाइन","ऑनलाइन"],offline:["Offline","ऑफ़लाइन","ऑफलाइन"],vetBtn:["Vet","पशु डॉक्टर","पशुवैद्य"],
+ totalHerd:["All cows","कुल पशु","एकूण जनावरे"],highRisk:["In danger","ज़्यादा ख़तरा","जास्त धोका"],nCows:["{n} cows","{n} पशु","{n} जनावरे"],
+ needWatch:["Need watching","नज़र रखें","लक्ष ठेवा"],avgChew:["Average cud chewing","औसत जुगाली","सरासरी रवंथ"],hrsDay:["hours/day","घंटे/दिन","तास/दिवस"],
+ herdChartT:["Herd health","झुंड की सेहत","कळपाचे आरोग्य"],
+ herdChartS:["How many cows are healthy, and how many are at risk","कितने पशु स्वस्थ हैं और कितनों को ख़तरा है","किती जनावरे निरोगी आहेत आणि किती जणांना धोका आहे"],
+ cowWord:["Cow","पशु","जनावर"],
+ readingsT:["Today's readings","आज की रीडिंग","आजचे मोजमाप"],
+ readingsS:["Green area is normal. The black dot is this cow's reading today.","हरा हिस्सा सामान्य है। काला बिंदु इस पशु की आज की रीडिंग है।","हिरवा भाग सामान्य आहे. काळा ठिपका म्हणजे या जनावराचे आजचे मोजमाप."],
+ tempT:["Udder temperature – last 5 days","थन का तापमान – पिछले 5 दिन","कासेचे तापमान – गेले 5 दिवस"],
+ tempS:["Each dot is one day. A dot above the dashed line means the udder is too hot.","हर बिंदु एक दिन है। बिंदीदार रेखा से ऊपर का बिंदु मतलब थन ज़्यादा गर्म है।","प्रत्येक ठिपका एक दिवस आहे. ठिपक्यांच्या रेषेच्या वर म्हणजे कास जास्त गरम आहे."],
+ normalLimit:["Normal limit","सामान्य सीमा","सामान्य मर्यादा"],
+ d4:["4 days ago","4 दिन पहले","4 दिवसांपूर्वी"],d3:["3 days ago","3 दिन पहले","3 दिवसांपूर्वी"],d2:["2 days ago","2 दिन पहले","2 दिवसांपूर्वी"],d1:["Yesterday","कल","काल"],d0:["Today","आज","आज"],
+ explainT:["ⓘ What this graph means","ⓘ यह ग्राफ़ क्या बताता है","ⓘ हा आलेख काय सांगतो"],
+ explainB:["A rising udder temperature can be the first sign of an udder infection (mastitis).","थन का तापमान बढ़ना थनैला (संक्रमण) की पहली निशानी हो सकती है।","कासेचे तापमान वाढणे हे कासदाह (संसर्ग) चे पहिले लक्षण असू शकते."],
+ mTemp:["Udder heat","थन की गर्मी","कासेची उष्णता"],mChew:["Cud chewing","जुगाली","रवंथ"],mSalt:["Milk saltiness (EC)","दूध में खारापन (EC)","दुधातील खारटपणा (EC)"],
+ hUnit:["h","घंटे","तास"],
+ sOk:["Normal","सामान्य","सामान्य"],sMed:["A little off","थोड़ा गड़बड़","थोडे बिघडलेले"],sHi:["Not normal","सामान्य नहीं","सामान्य नाही"],sNa:["No data","जानकारी नहीं","माहिती नाही"],
+ bHi:["Needs care now","अभी देखभाल चाहिए","आत्ता काळजी हवी"],bMed:["Watch closely","नज़र रखें","लक्ष ठेवा"],bOk:["Healthy","स्वस्थ","निरोगी"],
+ herdT:["My Cows","मेरे पशु","माझी जनावरे"],herdS:["{n} cows tracked by camera","कैमरे से देखे जा रहे {n} पशु","कॅमेऱ्याने पाहिलेली {n} जनावरे"],
+ searchPh:["Search by cow number or breed...","पशु नंबर या नस्ल से खोजें...","जनावराचा क्रमांक किंवा जात शोधा..."],
+ fAll:["All","सभी","सर्व"],fHi:["In danger","ज़्यादा ख़तरा","जास्त धोका"],fMed:["Watch","नज़र रखें","लक्ष ठेवा"],fOk:["Healthy","स्वस्थ","निरोगी"],
+ daysMilk:["Days since calving: {n}","ब्याने के बाद के दिन: {n}","व्यायल्यानंतरचे दिवस: {n}"],
+ calved:["Times calved: {n}","ब्या चुकी: {n} बार","विण्याची संख्या: {n}"],
+ camera:["Camera {n}","कैमरा {n}","कॅमेरा {n}"],
+ noMatch:["No cows match your search.","आपकी खोज से कोई पशु नहीं मिला।","तुमच्या शोधाशी जुळणारे जनावर नाही."],
+ fcT:["Health Warnings – Next 7 to 14 Days","स्वास्थ्य चेतावनी – अगले 7 से 14 दिन","आरोग्य इशारा – पुढील 7 ते 14 दिवस"],
+ fcS:["Tells you early which cow may fall sick","पहले से बताता है कि कौन सा पशु बीमार हो सकता है","कोणते जनावर आजारी पडू शकते ते आधीच सांगतो"],
+ onset:["May get sick in {n} days","{n} दिन में बीमार हो सकती है","{n} दिवसांत आजारी पडू शकते"],
+ whatToDo:["What to do","क्या करें","काय करावे"],viewDetail:["Full details","पूरी जानकारी","पूर्ण माहिती"],
+ resolve:["Mark as healthy","स्वस्थ चिह्नित करें","निरोगी म्हणून नोंदवा"],
+ noRisk:["No warnings now. All cows are healthy. 🎉","अभी कोई चेतावनी नहीं। सभी पशु स्वस्थ हैं। 🎉","सध्या कोणताही इशारा नाही. सर्व जनावरे निरोगी आहेत. 🎉"],
+ p1:["Do a quick milk test (CMT) to check for udder infection","थनैला जाँचने के लिए दूध का CMT टेस्ट करें","कासदाह तपासण्यासाठी दुधाची CMT चाचणी करा"],
+ p2:["Move the cow to a separate stall","पशु को अलग बाड़े में रखें","जनावराला वेगळ्या गोठ्यात ठेवा"],
+ p3:["Put medicine on the udder","थन पर दवा लगाएँ","कासेवर औषध लावा"],
+ p4:["Call the vet","पशु डॉक्टर को बुलाएँ","पशुवैद्यकाला बोलवा"],
+ p5:["Check the cow more often","पशु की ज़्यादा बार जाँच करें","जनावराची जास्त वेळा तपासणी करा"],
+ noFlags:["No health problems.","कोई स्वास्थ्य समस्या नहीं।","आरोग्याची कोणतीही अडचण नाही."],close:["Close","बंद करें","बंद करा"],
+ setT:["Settings","सेटिंग्स","सेटिंग्ज"],setS:["Sensors, saved data and language","सेंसर, सहेजा डेटा और भाषा","सेन्सर, साठवलेला डेटा आणि भाषा"],
+ connected:["Connected","जुड़ा हुआ","जोडलेले"],gateway:["Sensor gateway","सेंसर गेटवे","सेन्सर गेटवे"],
+ nodesT:["Sensors and cameras","सेंसर और कैमरे","सेन्सर आणि कॅमेरे"],lastSeen:["Last seen: {t}","आख़िरी बार देखा: {t}","शेवटचे दिसले: {t}"],
+ gOn:["Working","चालू","सुरू"],gOff:["Not working","बंद","बंद"],gWeak:["Weak","कमज़ोर","कमकुवत"],
+ agoS:["{n} sec ago","{n} सेकंड पहले","{n} सेकंदांपूर्वी"],agoM:["{n} min ago","{n} मिनट पहले","{n} मिनिटांपूर्वी"],live:["live now","अभी लाइव","आत्ता लाइव्ह"],
+ storeT:["Data saved on this device","इस डिवाइस में सहेजा डेटा","या डिव्हाइसवर साठवलेला डेटा"],
+ milkLogs:["Milk records","दूध के रिकॉर्ड","दुधाच्या नोंदी"],treat:["Vet calls","डॉक्टर कॉल","पशुवैद्य कॉल"],cached:["Cows saved","सहेजे गए पशु","साठवलेली जनावरे"],
+ storeNote:["✓ Your data is safe on this device","✓ आपका डेटा इस डिवाइस पर सुरक्षित है","✓ तुमचा डेटा या डिव्हाइसवर सुरक्षित आहे"],
+ syncT:["Save online (Sync)","इंटरनेट पर सहेजें (सिंक)","इंटरनेटवर जतन करा (सिंक)"],
+ lastSynced:["Last synced: {t}","आख़िरी सिंक: {t}","शेवटचे सिंक: {t}"],syncNow:["Sync now","अभी सिंक करें","आता सिंक करा"],
+ langT:["Language","भाषा","भाषा"],
+ dangerT:["Danger zone","ख़तरे वाला हिस्सा","धोक्याचा भाग"],
+ dangerText:["This will erase your account and all farm data for good. It cannot be undone.","आपका अकाउंट और फार्म का सारा डेटा हमेशा के लिए मिट जाएगा। इसे वापस नहीं किया जा सकता।","तुमचे खाते आणि फार्मचा सर्व डेटा कायमचा मिटेल. हे परत मिळवता येणार नाही."],
+ delBtn:["Delete account","अकाउंट मिटाएँ","खाते हटवा"],
+ delText:["This will erase all farm data on this device for good. It cannot be undone.","इस डिवाइस का सारा फार्म डेटा हमेशा के लिए मिट जाएगा। इसे वापस नहीं किया जा सकता।","या डिव्हाइसवरील सर्व फार्म डेटा कायमचा मिटेल. हे परत मिळवता येणार नाही."],
+ delAll:["Delete everything","सब कुछ मिटाएँ","सर्व काही हटवा"],cancel:["Cancel","रद्द करें","रद्द करा"],
+ fCow:["Cow","पशु","जनावर"],fYield:["Milk amount (litres)","दूध की मात्रा (लीटर)","दुधाचे प्रमाण (लिटर)"],phYield:["e.g. 12.5","जैसे 12.5","उदा. 12.5"],save:["Save","सहेजें","जतन करा"],
+ vetT:["Call the Vet","पशु डॉक्टर को बुलाएँ","पशुवैद्यकाला बोलवा"],
+ vetQAbout:["Tell the on-call vet about {who}?","{who} के बारे में ऑन-कॉल पशु डॉक्टर को बताएँ?","{who} बद्दल ऑन-कॉल पशुवैद्यकाला कळवायचे?"],
+ vetQFarm:["Tell the on-call vet about this farm?","इस फार्म के लिए ऑन-कॉल पशु डॉक्टर को बताएँ?","या फार्मसाठी ऑन-कॉल पशुवैद्यकाला कळवायचे?"],
+ notifyBtn:["Tell the vet","डॉक्टर को बताएँ","पशुवैद्यकाला कळवा"],
+ tMilk:["Milk record saved for #{n}","#{n} का दूध दर्ज हो गया","#{n} चे दूध नोंदवले"],
+ tVetAbout:["Vet told about {who}","डॉक्टर को {who} के बारे में बता दिया","पशुवैद्यकाला {who} बद्दल कळवले"],
+ tVet:["Vet told – help is on the way","डॉक्टर को बता दिया – वे आ रहे हैं","पशुवैद्यकाला कळवले – ते येत आहेत"],
+ tNormal:["Cow #{n} marked healthy","#{n} को स्वस्थ चिह्नित किया","#{n} निरोगी म्हणून नोंदवले"],
+ tSync:["Synced successfully","सिंक हो गया","सिंक झाले"],
+ tSyncFail:["Sync failed – server not reachable","सिंक नहीं हुआ – सर्वर नहीं मिल रहा","सिंक झाले नाही – सर्व्हर मिळत नाही"],
+ tOffline:["Offline – start the backend to sync (see README)","ऑफ़लाइन – सिंक के लिए बैकएंड चालू करें (README देखें)","ऑफलाइन – सिंकसाठी बॅकएंड सुरू करा (README पहा)"],
+ tDeleted:["Account data deleted","अकाउंट का डेटा मिटा दिया गया","खात्याचा डेटा हटवला"],
+ nTemp:["Udder is {v}°C hotter than usual","थन सामान्य से {v}°C ज़्यादा गर्म","कास नेहमीपेक्षा {v}°C जास्त गरम"],
+ nSalt:["Milk saltiness up {v}%","दूध का खारापन {v}% बढ़ा","दुधाचा खारटपणा {v}% वाढला"],
+ nChew:["Cud chewing down {v}%","जुगाली {v}% घटी","रवंथ {v}% घटले"],
+ nYield:["Milk down {v}%","दूध {v}% घटा","दूध {v}% घटले"]
+};
+// Texts that come from the database (they are stored in English) — translated when shown
+const D={
+ "Holstein Friesian":["Holstein Friesian","होल्स्टीन फ्रीज़ियन","होल्स्टीन फ्रिजियन"],"Gir":["Gir","गिर","गीर"],"Sahiwal":["Sahiwal","साहीवाल","साहीवाल"],
+ "Crossbreed":["Crossbreed","संकर नस्ल","संकरित जात"],"Jersey":["Jersey","जर्सी","जर्सी"],
+ "Green Pastures Farm":["Green Pastures Farm","ग्रीन पास्चर्स फार्म","ग्रीन पास्चर्स फार्म"],"Anand, Gujarat":["Anand, Gujarat","आनंद, गुजरात","आणंद, गुजरात"],
+ "Subclinical Mastitis Risk":["Udder infection may be starting","थन में संक्रमण शुरू हो सकता है","कासेत संसर्ग सुरू होत असावा"],
+ "Elevated Udder Temp":["Udder is warmer than normal","थन सामान्य से ज़्यादा गर्म है","कास सामान्यपेक्षा जास्त गरम आहे"],
+ "Milk Yield Drop":["Giving less milk than usual","रोज़ से कम दूध दे रही है","नेहमीपेक्षा कमी दूध देत आहे"],
+ "EC Spike":["Milk too salty","दूध ज़्यादा खारा","दूध जास्त खारट"],"Rumination Drop":["Chewing cud less","जुगाली कम","रवंथ कमी"],
+ "Temp Elevated":["Udder too hot","थन ज़्यादा गर्म","कास जास्त गरम"],"Temp Watch":["Udder a bit warm","थन थोड़ा गर्म","कास थोडी गरम"],
+ "Yield Drop":["Less milk","कम दूध","कमी दूध"],"EC Rise":["Milk getting salty","दूध खारा हो रहा है","दूध खारट होत आहे"],
+ "ESP32 Node — Parlour":["Sensor – milking area","सेंसर – दूध निकालने की जगह","सेन्सर – दूध काढण्याची जागा"],
+ "ESP32 Node — Maternity Pen A":["Sensor – calving pen A","सेंसर – ब्याने का बाड़ा A","सेन्सर – विण्याचा गोठा A"],
+ "ESP32 Node — Pasture West":["Sensor – west grazing field","सेंसर – पश्चिमी चरागाह","सेन्सर – पश्चिमेकडील चराऊ कुरण"],
+ "CCTV Feed — CAM-01":["Camera 1","कैमरा 1","कॅमेरा 1"],"CCTV Feed — CAM-03":["Camera 3","कैमरा 3","कॅमेरा 3"]
+};
+const PROTOCOL={hi:['p1','p2','p3','p4'],med:['p1','p5','p4']};
+const ICONS={home:"🏠",dashboard:"▦",herd:"🐄",forecast:"📈",settings:"⚙️"};
+const DEFAULT={
+  farm:{name:"Green Pastures Farm",loc:"Anand, Gujarat",head:42},
+  lang:"en",theme:"light",lastSync:null,
+  stats:{milking:0,treatments:0},
+  gateways:[
+    {n:"ESP32 Node — Parlour",s:"Online",t:"2s ago"},
+    {n:"ESP32 Node — Maternity Pen A",s:"Online",t:"5s ago"},
+    {n:"CCTV Feed — CAM-01",s:"Online",t:"live"},
+    {n:"CCTV Feed — CAM-03",s:"Offline",t:"14m ago"},
+    {n:"ESP32 Node — Pasture West",s:"Degraded",t:"48s ago"}
+  ],
+  cattle:[
+    {id:27,breed:"Holstein Friesian",dim:128,lac:3,cam:"YOLO CAM-01",risk:"hi",udder:39.6,rum:5.4,ec:6.4,trend:[38.2,38.6,39.0,39.4,39.6],issue:"Subclinical Mastitis Risk",tags:["EC Spike","Rumination Drop","Temp Elevated"],onset:9,notes:["Udder Temp +1.4°C","Milk EC +22%","Rumination -30%"]},
+    {id:104,breed:"Gir",dim:64,lac:2,cam:"YOLO CAM-02",risk:"ok",udder:38.4,rum:8.0,ec:4.8,trend:[38.6,38.3,38.5,38.2,38.4],issue:null,tags:[],onset:null,notes:[]},
+    {id:15,breed:"Sahiwal",dim:96,lac:4,cam:"YOLO CAM-03",risk:"med",udder:38.9,rum:6.6,ec:5.6,trend:[38.3,38.6,39.0,38.8,38.9],issue:"Elevated Udder Temp",tags:["Temp Watch"],onset:12,notes:["Udder Temp +0.6°C"]},
+    {id:88,breed:"Crossbreed",dim:152,lac:2,cam:"YOLO CAM-04",risk:"ok",udder:38.2,rum:8.4,ec:0,trend:[38.0,38.3,38.1,38.4,38.2],issue:null,tags:[],onset:null,notes:[]},
+    {id:42,breed:"Jersey",dim:41,lac:1,cam:"YOLO CAM-05",risk:"ok",udder:38.3,rum:8.1,ec:4.9,trend:[38.0,38.5,38.6,38.2,38.3],issue:null,tags:[],onset:null,notes:[]},
+    {id:63,breed:"Sahiwal",dim:210,lac:5,cam:"YOLO CAM-06",risk:"hi",udder:39.1,rum:6.3,ec:6.1,trend:[38.4,38.7,39.0,39.3,39.1],issue:"Milk Yield Drop",tags:["Yield Drop","EC Rise"],onset:7,notes:["Milk Yield -18%","Milk EC +16%","Udder Temp +0.7°C"]}
+  ]
+};
+const API='/api';
+let ONLINE=false;
+let S=JSON.parse(localStorage.getItem('ekaksh_state')||'null')||JSON.parse(JSON.stringify(DEFAULT));
+let view='home', breedF='All', riskF='All', search='';
+
+// ---------- Helpers ----------
+function li(){const i=LANGS.indexOf(S.lang);return i<0?0:i;}
+function t(k,v){let s=(X[k]||[k,k,k])[li()];if(v)for(const a in v)s=s.split('{'+a+'}').join(v[a]);return s;}
+function d(s){return D[s]?D[s][li()]:s;}             // translate a database text
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function cowName(c){return `#${c.id} ${d(c.breed)}`;}
+function camName(c){const m=/(\d+)\s*$/.exec(c.cam||'');return m?t('camera',{n:Number(m[1])}):c.cam;}
+function note(n){
+  let m;
+  if(m=/^Udder Temp [+-]?([\d.]+)°C$/.exec(n))return t('nTemp',{v:m[1]});
+  if(m=/^Milk EC [+-]?(\d+)%$/.exec(n))return t('nSalt',{v:m[1]});
+  if(m=/^Rumination [+-]?(\d+)%$/.exec(n))return t('nChew',{v:m[1]});
+  if(m=/^Milk Yield [+-]?(\d+)%$/.exec(n))return t('nYield',{v:m[1]});
+  return n;
+}
+function ago(s){
+  let m;
+  if(s==='live')return t('live');
+  if(m=/^(\d+)s ago$/.exec(s))return t('agoS',{n:m[1]});
+  if(m=/^(\d+)m ago$/.exec(s))return t('agoM',{n:m[1]});
+  return s;
+}
+function save(){localStorage.setItem('ekaksh_state',JSON.stringify(S));}
+function badge(r){return `<span class="badge ${r}">${t(r==='hi'?'bHi':r==='med'?'bMed':'bOk')}</span>`;}
+function toast(msg){
+  const el=document.createElement('div');el.className='toast';el.textContent=msg;document.body.appendChild(el);
+  setTimeout(()=>el.remove(),2400);
+}
+function openModal(html){document.getElementById('modalRoot').innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">${html}</div></div>`;}
+function closeModal(){document.getElementById('modalRoot').innerHTML='';}
+function go(v){view=v;render();window.scrollTo(0,0);}
+
+// ---------- Simple graphs ----------
+// Each reading is judged against a normal range: level = ok / med / hi / na
+const GAUGE={
+  temp:{min:37.5,max:40,cuts:[38.6,39.0],rev:false},
+  chew:{min:3,max:10,cuts:[6,7],rev:true},
+  salt:{min:3,max:8,cuts:[5.4,6.0],rev:false}
+};
+function level(kind,v){
+  if(v===null||v===undefined||v===0)return 'na';
+  if(kind==='temp')return v<=38.6?'ok':v<=39.0?'med':'hi';
+  if(kind==='chew')return v>=7?'ok':v>=6?'med':'hi';
+  return v<=5.4?'ok':v<=6.0?'med':'hi';
+}
+const LVCOL={ok:'var(--ok-fg)',med:'var(--med-fg)',hi:'var(--hi-fg)',na:'var(--ink2)'};
+// Meter: green / yellow / red zones with a black dot showing the reading
+function gauge(kind,v){
+  const g=GAUGE[kind],r=g.max-g.min,p=x=>Math.min(100,Math.max(0,(x-g.min)/r*100));
+  const a=p(g.cuts[0]),b=p(g.cuts[1]);
+  const zones=g.rev?[['hi',a],['med',b-a],['ok',100-b]]:[['ok',a],['med',b-a],['hi',100-b]];
+  const seg=zones.map(z=>`<i style="width:${z[1]}%;background:${LVCOL[z[0]]}"></i>`).join('');
+  const dot=(v?`<b class="gdot" style="left:${p(v)}%"></b>`:'');
+  return `<div class="gauge"><div class="gtrack">${seg}</div>${dot}</div>`;
+}
+function metricBox(c,kind,withGauge){
+  const v={temp:c.udder,chew:c.rum,salt:c.ec}[kind];
+  const lv=level(kind,v);
+  const name={temp:t('mTemp'),chew:t('mChew'),salt:t('mSalt')}[kind];
+  const val=lv==='na'?'—':kind==='temp'?v+'°C':kind==='chew'?v+' '+t('hUnit'):v+' mS';
+  return `<div class="metric ${lv}"><div class="l">${name}</div><div class="v">${val}</div><div class="st">${t(lv==='ok'?'sOk':lv==='med'?'sMed':lv==='hi'?'sHi':'sNa')}</div>${withGauge&&lv!=='na'?gauge(kind,v):''}</div>`;
+}
+function metricsRow(c,withGauge){return `<div class="cowrow">${['temp','chew','salt'].map(k=>metricBox(c,k,withGauge)).join('')}</div>`;}
+// Line graph: udder temperature over the last 5 days, with a dashed normal limit
+function trendChart(c){
+  const W=320,H=180,pl=34,pr=14,pt=24,pb=30,y0=37.5,y1=40,vals=c.trend,n=vals.length;
+  const Y=v=>pt+(y1-v)/(y1-y0)*(H-pt-pb),Xp=i=>pl+i*(W-pl-pr)/(n-1);
+  const grid=[38,39,40].map(v=>`<line x1="${pl}" x2="${W-pr}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${pl-6}" y="${Y(v)+4}" text-anchor="end" style="fill:var(--ink2)" font-size="11">${v}°</text>`).join('');
+  const line=vals.map((v,i)=>`${Xp(i)},${Y(v)}`).join(' ');
+  const dots=vals.map((v,i)=>`<circle cx="${Xp(i)}" cy="${Y(v)}" r="5.5" fill="${LVCOL[level('temp',v)]}"/><text x="${Xp(i)}" y="${Y(v)-11}" text-anchor="middle" style="fill:var(--ink)" font-size="11" font-weight="600">${v}</text>`).join('');
+  const labs=vals.map((v,i)=>`<text x="${Xp(i)}" y="${H-10}" text-anchor="middle" style="fill:var(--ink2)" font-size="10">${t('d'+(n-1-i))}</text>`).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:520px;display:block">${grid}
+   <line x1="${pl}" x2="${W-pr}" y1="${Y(38.6)}" y2="${Y(38.6)}" stroke="var(--ok-fg)" stroke-width="2" stroke-dasharray="6 4"/>
+   <polyline points="${line}" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linejoin="round"/>${dots}${labs}</svg>
+   <div class="legend"><span><i class="ldash"></i> ${t('normalLimit')} (38.6°C)</span></div>`;
+}
+// Bar graph: how many cows are healthy / watch / danger
+function herdBars(){
+  const rows=[['ok','bOk'],['med','bMed'],['hi','highRisk']],tot=S.cattle.length||1;
+  return rows.map(r=>{const n=S.cattle.filter(c=>c.risk===r[0]).length;
+    return `<div class="hbar"><span class="hl">${t(r[1])}</span><div class="htrack"><div style="width:${n/tot*100}%;background:${LVCOL[r[0]]}"></div></div><b>${n}</b></div>`;}).join('');
+}
+
+function renderNav(){
+  const items=['home','dashboard','herd','forecast','settings'];
+  document.getElementById('nav').innerHTML=items.map(i=>`<button class="${view===i?'active':''}" onclick="go('${i}')">${ICONS[i]} <span>${t(i)}</span></button>`).join('');
+  document.getElementById('bnav').innerHTML=items.map(i=>`<button class="${view===i?'active':''}" onclick="go('${i}')"><span>${ICONS[i]}</span><span>${t(i)}</span></button>`).join('');
+  document.getElementById('brandSub').textContent=t('brandSub');
+  document.getElementById('gwTxt').textContent=t('gwOnline');
+  document.getElementById('fbLbl').textContent=t('activeFarm');
+  document.getElementById('fbName').textContent=d(S.farm.name);
+  document.getElementById('fbSub').textContent=t('cattleCount',{n:S.farm.head,loc:d(S.farm.loc)});
+  document.documentElement.lang=S.lang;
+  document.title='EKAKSH — '+t('brandSub');
+  document.getElementById('uName').textContent=USER?USER.name:'';
+  const ub=document.getElementById('uOut');ub.textContent=t('logout');ub.style.display=USER?'':'none';
+}
+function highRiskCount(){return S.cattle.filter(c=>c.risk==='hi').length;}
+
+function riskRow(c){return `<div class="card cowcard" style="display:flex;justify-content:space-between;align-items:center;gap:10px"><div><b>${cowName(c)}</b><div style="color:var(--ink2);font-size:13px">${d(c.issue)}</div></div>${badge(c.risk)}</div>`;}
+
+function viewHome(){
+  const need=S.cattle.filter(c=>c.risk!=='ok').length;
+  const cards=[['dashboard','▦','cDashT','cDashD'],['herd','🐄','cHerdT','cHerdD'],['forecast','📈','cFcT','cFcD'],['settings','⚙️','cSetT','cSetD']];
+  return `
+  <section class="hhero">
+    <div class="pic"><img src="cow.jpg" alt="" onerror="this.onerror=null;this.src='download.webp'"></div>
+    <div class="txt">
+      <div class="eyebrow">${t('namaste')}</div>
+      <h1>${esc(d(S.farm.name))}</h1>
+      <p class="loc">${esc(d(S.farm.loc))}</p>
+      <div class="hlinks">${[['dashboard','cDashT'],['herd','cHerdT'],['forecast','cFcT'],['settings','cSetT']].map(x=>`<a onclick="go('${x[0]}')">${t(x[1])}</a>`).join('')}<a onclick="logMilkingModal()">${t('logMilking')}</a><a onclick="vetAlert()">${t('vetCall')}</a></div>
+    </div>
+  </section>
+  <section class="hsplit">
+    <h2>${t('priority')}</h2>
+    <div><p>${t('cDashD')}. ${t('cFcD')}.</p>
+      <div class="nums"><div><b>${S.farm.head}</b> ${t('watched')}</div><div style="color:var(--hi-fg)"><b>${need}</b> ${t('need')}</div></div></div>
+  </section>
+  <div class="actions" style="margin-bottom:20px">
+    <button class="btn btn-dark" style="flex:1;justify-content:center" onclick="logMilkingModal()">＋ ${t('logMilking')}</button>
+    <button class="btn btn-accent" style="flex:1;justify-content:center" onclick="vetAlert()">🩺 ${t('vetCall')}</button>
+  </div>
+  <div class="grid4" style="grid-template-columns:repeat(2,1fr)">
+    ${cards.map(c=>`<div class="card" style="cursor:pointer" onclick="go('${c[0]}')"><b>${c[1]} ${t(c[2])}</b><div style="color:var(--ink2);font-size:13px;margin-top:4px">${t(c[3])}</div></div>`).join('')}
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin:22px 0 10px"><h3 style="margin:0">♡ ${t('priority')}</h3><span class="see" onclick="go('forecast')">${t('seeAll')}</span></div>
+  ${S.cattle.filter(c=>c.risk!=='ok').map(riskRow).join('')}`;
+}
+
+function viewDashboard(){
+  const sel=S.cattle.find(c=>c.id===S.selCow)||S.cattle[0];
+  const avgChew=(S.cattle.reduce((a,c)=>a+c.rum,0)/(S.cattle.length||1)).toFixed(1);
+  const watchN=S.cattle.filter(c=>c.risk==='med').length;
+  return `
+  <div class="topline">
+    <div><h1>${esc(d(S.farm.name))}</h1><p>${t('cowsLine',{loc:esc(d(S.farm.loc)),n:S.farm.head})}</p></div>
+    <div class="actions">
+      <button class="btn btn-ghost">📶 ${t(ONLINE?'online':'offline')}</button>
+      <button class="btn btn-dark" onclick="logMilkingModal()">＋ ${t('logMilking')}</button>
+      <button class="btn btn-accent" onclick="vetAlert()">🩺 ${t('vetBtn')}</button>
+    </div>
+  </div>
+  <div class="grid4">
+    <div class="card stat"><div class="l">${t('totalHerd')}</div><div class="v">${S.farm.head}</div></div>
+    <div class="card stat hi"><div class="l">${t('highRisk')}<span class="see" style="color:var(--hi-fg)" onclick="go('forecast')">${t('seeAll')}</span></div><div class="v">${t('nCows',{n:highRiskCount()})}</div></div>
+    <div class="card stat med"><div class="l">${t('needWatch')}</div><div class="v">${t('nCows',{n:watchN})}</div></div>
+    <div class="card stat ok"><div class="l">${t('avgChew')}</div><div class="v">${avgChew} <span style="font-size:14px">${t('hrsDay')}</span></div></div>
+  </div>
+  <div class="grid2">
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <h3 style="margin:0">${t('herdChartT')}</h3>
+        <p style="color:var(--ink2);font-size:13px">${t('herdChartS')}</p>
+        ${herdBars()}
+      </div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><h3 style="margin:0">${t('tempT')}</h3>
+          <select class="selcow" onchange="S.selCow=Number(this.value);render()">${S.cattle.map(c=>`<option value="${c.id}" ${c.id===sel.id?'selected':''}>${t('cowWord')} ${cowName(c)}</option>`).join('')}</select></div>
+        <p style="color:var(--ink2);font-size:13px">${t('tempS')}</p>
+        ${trendChart(sel)}
+        <div class="card" style="background:var(--cream);font-size:13px;color:var(--ink2);margin-top:12px"><b style="color:var(--ink)">${t('explainT')}</b><br>${t('explainB')}</div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <h3 style="margin:0">${t('readingsT')} – ${cowName(sel)}</h3>
+        <p style="color:var(--ink2);font-size:13px">${t('readingsS')}</p>
+        ${metricsRow(sel,true)}
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h3 style="margin:0">${t('priority')}</h3><span class="see" onclick="go('forecast')">${t('seeAll')}</span></div>
+      ${S.cattle.filter(c=>c.risk==='hi').map(c=>`
+      <div class="card cowcard">
+        <div class="cowhead"><div><b>${cowName(c)}</b><div style="color:var(--ink2);font-size:13px">${d(c.issue)}</div></div>${badge(c.risk)}</div>
+        <div style="margin-bottom:10px">${c.notes.map(n=>`<span class="tag">${note(n)}</span>`).join('')}</div>
+        <button class="btn btn-accent" style="width:100%;justify-content:center;margin-top:10px" onclick="vetAlert(${c.id})">🩺 ${t('notifyBtn')}</button>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function herdList(){
+  let list=S.cattle.filter(c=>(breedF==='All'||c.breed===breedF)&&(riskF==='All'||c.risk===riskF)&&(!search||(''+c.id).includes(search)||c.breed.toLowerCase().includes(search.toLowerCase())||d(c.breed).includes(search)));
+  return list.map(c=>`
+  <div class="card cowcard">
+    <div class="cowhead" onclick="cowDetail(${c.id})">
+      <div><b>${d(c.breed)}</b><div style="color:var(--ink2);font-size:13px">${t('daysMilk',{n:c.dim})} • ${t('calved',{n:c.lac})}</div><div style="color:var(--accent);font-size:12px">📷 ${camName(c)}</div></div>
+      <div style="text-align:right"><div class="cowid">#${c.id}</div>${badge(c.risk)}</div>
+    </div>
+    ${metricsRow(c,true)}
+  </div>`).join('')||`<p style="color:var(--ink2)">${t('noMatch')}</p>`;
+}
+function viewHerd(){
+  const breeds=['All',...new Set(S.cattle.map(c=>c.breed))];
+  return `
+  <h1>${t('herdT')}</h1><p style="color:var(--ink2);margin-top:-8px">${t('herdS',{n:S.cattle.length})}</p>
+  <input class="search" placeholder="${t('searchPh')}" value="${esc(search)}" oninput="search=this.value;document.getElementById('herdList').innerHTML=herdList()">
+  <div class="chips">${breeds.map(b=>`<span class="chip ${breedF===b?'active':''}" onclick="breedF='${b}';render()">${b==='All'?t('fAll'):d(b)}</span>`).join('')}</div>
+  <div class="chips">${['All','hi','med','ok'].map(r=>`<span class="chip ${riskF===r?'active':''}" onclick="riskF='${r}';render()">${t(r==='All'?'fAll':r==='hi'?'fHi':r==='med'?'fMed':'fOk')}</span>`).join('')}</div>
+  <div id="herdList">${herdList()}</div>`;
+}
+
+function viewForecast(){
+  const risk=S.cattle.filter(c=>c.risk!=='ok');
+  return `<h1>${t('fcT')}</h1><p style="color:var(--ink2);margin-top:-8px">${t('fcS')}</p>
+  ${risk.length? risk.map(c=>`
+  <div class="card cowcard">
+    <div class="cowhead"><div><b>${cowName(c)}</b><div style="color:var(--ink2)">${d(c.issue)}</div></div><div style="text-align:right">${badge(c.risk)}<div style="font-size:12px;color:var(--ink2);margin-top:4px"><b>${t('onset',{n:c.onset})}</b></div></div></div>
+    <div style="margin-bottom:10px">${c.tags.map(tg=>`<span class="tag">${d(tg)}</span>`).join('')}</div>
+    ${metricsRow(c,true)}
+    <div style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--ink2);margin:14px 0 6px">${t('whatToDo')}</div>
+    <div class="proto">${(PROTOCOL[c.risk]||PROTOCOL.med).map((p,i)=>`<label><input type="checkbox" ${c.done&&c.done[i]?'checked':''} onchange="toggleProto(${c.id},${i})"> ${t(p)}</label>`).join('')}</div>
+    <div class="rowbtn"><button class="btn btn-ghost" onclick="cowDetail(${c.id})">${t('viewDetail')}</button><button class="btn btn-dark" onclick="resolveRisk(${c.id})">${t('resolve')}</button></div>
+  </div>`).join('') : `<div class="card">${t('noRisk')}</div>`}`;
+}
+
+function viewSettings(){
+  const gs=s=>s==='Online'?'gOn':s==='Offline'?'gOff':'gWeak';
+  const lastSync=S.lastSync?new Date(S.lastSync).toLocaleTimeString(LOC[S.lang]):'—';
+  return `<h1>${t('setT')}</h1><p style="color:var(--ink2);margin-top:-8px">${t('setS')}</p>${accountCard()}
+  <div class="card" style="margin-bottom:16px"><div style="display:flex;justify-content:space-between;align-items:center"><b><span class="dot" style="background:var(--ok-fg);display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px"></span>${t('connected')}</b><span style="color:var(--ink2);font-size:12px">${t('gateway')}</span></div></div>
+  <div style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--ink2);margin-bottom:8px">${t('nodesT')}</div>
+  <div class="card" style="margin-bottom:16px">${S.gateways.map(g=>`<div class="node"><div><div class="n">${d(g.n)}</div><div class="s">${t('lastSeen',{t:ago(g.t)})}</div></div><span class="badge ${g.s==='Online'?'ok':g.s==='Offline'?'hi':'med'}">${t(gs(g.s))}</span></div>`).join('')}</div>
+  <div class="card" style="margin-bottom:16px">
+    <h3 style="margin-top:0">🗄 ${t('storeT')}</h3>
+    <div class="grid4" style="grid-template-columns:repeat(3,1fr);margin-bottom:0">
+      <div class="card" style="text-align:center;background:var(--cream)"><div style="font-size:26px;font-family:Georgia,serif">${S.stats.milking}</div><div style="font-size:12px;color:var(--ink2)">${t('milkLogs')}</div></div>
+      <div class="card" style="text-align:center;background:var(--cream)"><div style="font-size:26px;font-family:Georgia,serif">${S.stats.treatments}</div><div style="font-size:12px;color:var(--ink2)">${t('treat')}</div></div>
+      <div class="card" style="text-align:center;background:var(--cream)"><div style="font-size:26px;font-family:Georgia,serif">${S.cattle.length}</div><div style="font-size:12px;color:var(--ink2)">${t('cached')}</div></div>
+    </div>
+    <p style="font-size:12px;color:var(--ink2);margin-bottom:0">${t('storeNote')}</p>
+  </div>
+  <div class="card" style="margin-bottom:16px">
+    <h3 style="margin-top:0">☁ ${t('syncT')}</h3>
+    <p style="color:var(--ink2);font-size:13px">${t('lastSynced',{t:lastSync})}</p>
+    <button class="btn btn-dark" style="width:100%;justify-content:center" onclick="syncNow()">↻ ${t('syncNow')}</button>
+  </div>
+  <div class="card" style="margin-bottom:16px">
+    <h3 style="margin-top:0">🌐 ${t('langT')}</h3>
+    <div class="lang">
+      <button class="${S.lang==='en'?'active':''}" onclick="setLang('en')"><b>English</b></button>
+      <button class="${S.lang==='hi'?'active':''}" onclick="setLang('hi')"><b>हिंदी</b></button>
+      <button class="${S.lang==='mr'?'active':''}" onclick="setLang('mr')"><b>मराठी</b></button>
+    </div>
+  </div>
+  <div class="card danger">
+    <h3 style="margin-top:0;color:var(--hi-fg)">⚠ ${t('dangerT')}</h3>
+    <p style="font-size:13px;color:var(--ink2)">${t('dangerText')}</p>
+    <button class="btn" style="background:var(--hi-bg);color:var(--hi-fg)" onclick="deleteConfirm()">🗑 ${t('delBtn')}</button>
+  </div>`;
+}
+
+function render(){
+  renderNav();
+  const map={home:viewHome,dashboard:viewDashboard,herd:viewHerd,forecast:viewForecast,settings:viewSettings};
+  document.getElementById('main').innerHTML=map[view]();
+}
+async function setLang(l){
+  S.lang=l;save();render();
+  if(ONLINE){try{await api('/settings/lang',{method:'PUT',body:JSON.stringify({lang:l})});}catch(e){}}
+}
+async function syncNow(){
+  if(ONLINE){
+    try{const r=await api('/sync',{method:'POST'});S.lastSync=r.lastSync;}
+    catch(e){toast(t('tSyncFail'));return;}
+  }else{S.lastSync=Date.now();}
+  save();render();toast(t('tSync'));
+}
+async function toggleProto(id,i){
+  const c=S.cattle.find(x=>x.id===id);c.done=c.done||[];c.done[i]=!c.done[i];save();render();
+  if(ONLINE){try{await api(`/cattle/${id}/protocol`,{method:'POST',body:JSON.stringify({index:i})});}catch(e){}}
+}
+async function resolveRisk(id){
+  const c=S.cattle.find(x=>x.id===id);c.risk='ok';c.issue=null;c.tags=[];c.onset=null;save();render();toast(t('tNormal',{n:id}));
+  if(ONLINE){try{await api(`/cattle/${id}/resolve`,{method:'POST'});}catch(e){}}
+}
+function cowDetail(id){
+  const c=S.cattle.find(x=>x.id===id);
+  openModal(`<h3>${cowName(c)}</h3><p style="color:var(--ink2)">${t('daysMilk',{n:c.dim})} • ${t('calved',{n:c.lac})} • ${camName(c)}</p>
+  ${metricsRow(c,true)}
+  <div style="margin:14px 0 6px"><b>${t('tempT')}</b></div>${trendChart(c)}
+  ${c.issue?`<p><b>${d(c.issue)}</b></p>${c.tags.map(x=>`<span class="tag">${d(x)}</span>`).join('')}`:`<p style="color:var(--ok-fg)">${t('noFlags')}</p>`}
+  <button class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:14px" onclick="closeModal()">${t('close')}</button>`);
+}
+function logMilkingModal(){
+  openModal(`<h3>${t('logMilking')}</h3>
+  <div class="field"><label>${t('fCow')}</label><select id="mCow">${S.cattle.map(c=>`<option value="${c.id}">${cowName(c)}</option>`).join('')}</select></div>
+  <div class="field"><label>${t('fYield')}</label><input id="mYield" type="number" placeholder="${t('phYield')}"></div>
+  <div class="rowbtn"><button class="btn btn-ghost" onclick="closeModal()">${t('cancel')}</button><button class="btn btn-dark" onclick="submitMilking()">${t('save')}</button></div>`);
+}
+async function submitMilking(){
+  const cow=document.getElementById('mCow').value;
+  const yieldL=document.getElementById('mYield').value;
+  S.stats.milking++;save();closeModal();render();toast(t('tMilk',{n:cow}));
+  if(ONLINE){try{await api('/milking',{method:'POST',body:JSON.stringify({cowId:Number(cow),yield:yieldL?Number(yieldL):null})});}catch(e){}}
+}
+function vetAlert(id){
+  const c=id?S.cattle.find(x=>x.id===id):null;
+  openModal(`<h3>🩺 ${t('vetT')}</h3><p style="color:var(--ink2)">${c?t('vetQAbout',{who:cowName(c)}):t('vetQFarm')}</p>
+  <div class="rowbtn"><button class="btn btn-ghost" onclick="closeModal()">${t('cancel')}</button><button class="btn btn-accent" onclick="confirmVet(${id||'null'})">${t('notifyBtn')}</button></div>`);
+}
+async function confirmVet(id){
+  const c=id?S.cattle.find(x=>x.id===id):null;
+  S.stats.treatments++;save();closeModal();render();toast(c?t('tVetAbout',{who:cowName(c)}):t('tVet'));
+  if(ONLINE){try{await api('/vet-alert',{method:'POST',body:JSON.stringify({name:c?`${c.breed} #${c.id}`:null})});}catch(e){}}
+}
+</script>
+<script src="auth.js"></script>
+</body>
+</html>
